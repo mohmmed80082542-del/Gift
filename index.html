@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>هدية</title>
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background: linear-gradient(135deg,#1e1e2f,#2a2a40);
+  overflow:hidden;
+  color:white;
+}
+
+.box {
+  width:180px;
+  height:180px;
+  background:#6c5ce7;
+  position:relative;
+  cursor:pointer;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+.lid {
+  position:absolute;
+  width:180px;
+  height:45px;
+  background:#4834d4;
+  top:-45px;
+  left:0;
+  border-radius:12px 12px 0 0;
+  transition:0.6s;
+}
+
+.box.open .lid {
+  transform:translateY(-100px) rotate(-15deg);
+}
+
+.ribbon {
+  position:absolute;
+  width:30px;
+  height:180px;
+  background:white;
+  left:75px;
+}
+
+.ribbon-h {
+  position:absolute;
+  width:180px;
+  height:30px;
+  background:white;
+  top:75px;
+}
+
+.heart {
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:#ff4d6d;
+  transform:rotate(45deg);
+  opacity:0;
+}
+
+.heart::before,
+.heart::after {
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  background:#ff4d6d;
+  border-radius:50%;
+}
+
+.heart::before { top:-10px; left:0; }
+.heart::after { left:-10px; top:0; }
+
+.message {
+  position:absolute;
+  bottom:60px;
+  text-align:center;
+  font-size:18px;
+  opacity:0;
+  transition:1s;
+  line-height:1.6;
+  max-width:300px;
+}
+
+.show { opacity:1; }
+
+.hint {
+  position:absolute;
+  top:20px;
+  font-size:14px;
+  opacity:0.7;
+}
+</style>
+
+</head>
+<body>
+
+<div class="hint">اضغط على الصندوق 🎁</div>
+
+<div class="box" onclick="openBox()">
+  <div class="lid"></div>
+  <div class="ribbon"></div>
+  <div class="ribbon-h"></div>
+</div>
+
+<div class="message" id="msg">
+  مش رح أطول بالكلام…<br><br>
+  بس من أول مرة حكينا حسّيت في شي لطيف<br>
+  يمكن صدفة… ويمكن بداية شي حلو 🙂
+</div>
+
+<audio id="song" src="song.mp3"></audio>
+
+<script>
+function openBox() {
+  document.querySelector('.box').classList.add('open');
+
+  // قلوب
+  for(let i=0;i<30;i++){
+    let heart=document.createElement('div');
+    heart.className='heart';
+    document.body.appendChild(heart);
+
+    heart.style.left=Math.random()*window.innerWidth+'px';
+    heart.style.top='60%';
+
+    setTimeout(()=>{
+      heart.style.opacity=1;
+      heart.style.transition='transform 2s, top 2s, opacity 2s';
+      heart.style.top=Math.random()*200+'px';
+      heart.style.transform='translateY(-150px) scale('+(Math.random()+0.5)+') rotate(45deg)';
+    },100);
+  }
+
+  // الرسالة
+  setTimeout(()=>{
+    document.getElementById('msg').classList.add('show');
+  },1800);
+
+  // الموسيقى + دخول تدريجي
+  let audio = document.getElementById('song');
+  audio.volume = 0;
+  audio.play();
+
+  let vol = 0;
+  let fade = setInterval(() => {
+    if (vol < 0.4) {
+      vol += 0.02;
+      audio.volume = vol;
+    } else {
+      clearInterval(fade);
+    }
+  }, 100);
+}
+</script>
+
+</body>
+</html>
